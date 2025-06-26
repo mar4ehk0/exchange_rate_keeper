@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Currency;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+
+class CurrencyRepository
+{
+    // сделать базовый класс который будет создавать сам репозиторий как в конструкторе на основе entity
+
+    private EntityRepository $repo;
+
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
+        $this->repo = $this->entityManager->getRepository(Currency::class);
+    }
+
+    public function add(Currency $currency): void
+    {
+        $this->entityManager->persist($currency);
+    }
+
+    public function getById(int $id)
+    {
+        // написать реализацию
+    }
+}
