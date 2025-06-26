@@ -22,6 +22,11 @@ class CurrencyRepository
         $this->entityManager->persist($currency);
     }
 
+    public function remove(Currency $currency): void
+    {
+        $this->entityManager->remove($currency);
+    }
+
     public function getById(int $id)
     {
         // написать реализацию

@@ -17,7 +17,8 @@ class CurrencyService
 
     public function createCurrency(CurrencyCreationDto $dto): Currency
     {
-        // сделать запрос в бд через репозиторий если нету $dto->code то создаем иначе иключение
+        // сделать crud - для Currency
+        // использовать dto
 
         $currency = new Currency(
             $dto->code,

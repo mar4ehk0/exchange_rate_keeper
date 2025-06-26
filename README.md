@@ -1,4 +1,4 @@
-# Template for development PHP
+# Exchange rate keeper
 
 Contains:
 1. Docker
@@ -6,14 +6,4 @@ Contains:
 3. Nginx
 4. Postgresql
 
-## How to start
-
-1. Create `.env`
-    ```bash
-    cp docker/.env.example docker/.env
-    ```
-1. Edit `docker/.env`  
-
-   Change variable `COMPOSE_PROJECT_NAME=your_project_name`.  
-
-1. Use Makefile.
+Use makefile
