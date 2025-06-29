@@ -19,7 +19,8 @@ class CurrencyController extends BaseController {
         $data = json_decode($request->getContent(), true);
 
         $dto = new CurrencyCreationDto(
-            $data['code'],
+            $request->get('code'), // используй так, дает больше поведения
+//            $data['code'],
             $data['char'],
             $data['nominal'],
             $data['humanName']
@@ -27,7 +28,7 @@ class CurrencyController extends BaseController {
 
         $currency = $this->currencyService->createCurrency($dto);
 
-        return $this->json([
+        return $this->createResponseSuccess([
             'id' => $currency->getId(),
             'code' => $currency->getCode(),
             'char' => $currency->getChar(),
