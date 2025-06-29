@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\CurrencyService;
 use App\DTO\CurrencyCreationDto;
+use App\DTO\CurrencyGetDto;
 
 class CurrencyController extends BaseController {
 
@@ -35,4 +36,22 @@ class CurrencyController extends BaseController {
         ]);
     }
 
+    #[Route('/currency/{id}', name:'get_currency', methods: ['GET'])]
+    public function getCurrency(int $id): JsonResponse
+    {
+        $dto = new CurrencyGetDto($id);
+
+        $currency = $this->currencyService->getCurrencyById($dto);
+        if (!$currency) {
+            return $this->json(['error' => 'Not found'], 404);
+        }
+
+        return $this->json([
+            'code' => $currency->getCode(),
+            'char' => $currency->getChar(),
+            'nominal' => $currency->getNominal(),
+            'humanName' => $currency->getHumanName(),
+        ]);
+
+    }
 }

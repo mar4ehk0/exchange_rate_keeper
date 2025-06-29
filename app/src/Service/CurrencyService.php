@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
-use App\DTO\CurrencyCreationDto;
 use App\Entity\Currency;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\DTO\CurrencyCreationDto;
+use App\DTO\CurrencyGetDto;
 
 class CurrencyService
 {
@@ -15,11 +16,13 @@ class CurrencyService
     ) {
     }
 
+    public function getCurrencyById(CurrencyGetDto $dto): ?Currency
+    {
+        return $this->currencyRepository->getById($dto->id);
+    }
+
     public function createCurrency(CurrencyCreationDto $dto): Currency
     {
-        // сделать crud - для Currency
-        // использовать dto
-
         $currency = new Currency(
             $dto->code,
             $dto->char,
@@ -33,4 +36,5 @@ class CurrencyService
 
         return $currency;
     }
+
 }
