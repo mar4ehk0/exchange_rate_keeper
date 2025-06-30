@@ -3,15 +3,15 @@
 namespace App\Controller;
 
 use App\DTO\CurrencyUpdateDto;
+use App\Entity\Currency;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\CurrencyService;
 use App\DTO\CurrencyCreationDto;
-use App\DTO\CurrencyGetDto;
 
-class CurrencyController extends BaseController {
-
+class CurrencyController extends BaseController
+{
     public function __construct(private CurrencyService $currencyService) {}
 
     #[Route('/currency', name:'currency_create', methods: ['POST'])]
@@ -38,11 +38,10 @@ class CurrencyController extends BaseController {
     #[Route('/currency/{id}', name:'get_currency', methods: ['GET'])]
     public function getCurrency(int $id): JsonResponse
     {
-        $dto = new CurrencyGetDto($id);
+        $currency = $this->currencyService->getCurrencyById($id);
 
-        $currency = $this->currencyService->getCurrencyById($dto);
-        if (!$currency) {
-            return $this->createResponseError(['error' => 'Not found'], 404);
+        if (!$currency instanceof Currency) {
+            return $this->notFound(['error' => 'Not found']);
         }
 
         return $this->json([
@@ -57,18 +56,16 @@ class CurrencyController extends BaseController {
     #[Route('/currency/{id}', name:'currency_update', methods: ['POST'])]
     public function updateCurrency(int $id, Request $request): JsonResponse
     {
-        $dto = new CurrencyGetDto($id);
-
-        $updateDto = new CurrencyUpdateDto(
+        $dto = new CurrencyUpdateDto(
             $request->get('code'),
             $request->get('char'),
             $request->get('nominal'),
             $request->get('humanName'),
         );
 
-        $currency = $this->currencyService->updateCurrency($dto, $updateDto);
-        if (!$currency) {
-            return $this->createResponseError(['error' => 'Not found'], 404);
+        $currency = $this->currencyService->updateCurrency($id, $dto);
+        if (!$currency instanceof Currency) {
+            return $this->notFound(['error' => 'Not found']);
         }
 
         return $this->json([
@@ -78,5 +75,18 @@ class CurrencyController extends BaseController {
             'humanName' => $currency->getHumanName(),
         ]);
 
+    }
+
+    #[Route('/currency/{id}', name:'currency_delete', methods: ['DELETE'])]
+    public function deleteCurrency(int $id): JsonResponse
+    {
+        $currency = $this->currencyService->getCurrencyById($id);
+        if (!$currency instanceof Currency) {
+            return $this->notFound(['error' => 'Not found']);
+        }
+
+        $delete = $this->currencyService->deleteCurrency($id);
+
+        return $delete ? $this->createResponseSuccess(["success" => "Currency successfully deleted"]) :  $this->notFound(['error' => 'Not found']);
     }
 }

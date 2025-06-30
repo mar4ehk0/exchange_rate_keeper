@@ -11,8 +11,14 @@ abstract class BaseController extends AbstractController
     {
         return $this->json($data);
     }
-    public function createResponseError(mixed $data, int $code): JsonResponse
+
+    public function notFound(mixed $data): JsonResponse
     {
-        return $this->json($data, $code);
+        return $this->json($data, 404);
+    }
+
+    public function internalServerError(mixed $data): JsonResponse
+    {
+        return $this->json($data, 500);
     }
 }

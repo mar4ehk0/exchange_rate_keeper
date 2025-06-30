@@ -7,7 +7,6 @@ use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
-use App\DTO\CurrencyGetDto;
 
 class CurrencyService
 {
@@ -17,9 +16,9 @@ class CurrencyService
     ) {
     }
 
-    public function getCurrencyById(CurrencyGetDto $dto): ?Currency
+    public function getCurrencyById(int $id): ?Currency
     {
-        return $this->currencyRepository->getById($dto->id);
+        return $this->currencyRepository->getById($id);
     }
 
     public function createCurrency(CurrencyCreationDto $dto): Currency
@@ -38,9 +37,9 @@ class CurrencyService
         return $currency;
     }
 
-    public function updateCurrency(CurrencyGetDto $getDto, CurrencyUpdateDto $updateDto): ?Currency
+    public function updateCurrency(int $id, CurrencyUpdateDto $updateDto): ?Currency
     {
-        $currency = $this->getCurrencyById($getDto);
+        $currency = $this->getCurrencyById($id);
 
         if (!$currency) return null;
 
@@ -51,4 +50,16 @@ class CurrencyService
         return $currency;
     }
 
+    public function deleteCurrency(int $id): mixed
+    {
+        $currency = $this->getCurrencyById($id);
+
+        if (!$currency) return null;
+
+        $this->entityManager->remove($currency);
+
+        $this->entityManager->flush();
+
+        return true;
+    }
 }
