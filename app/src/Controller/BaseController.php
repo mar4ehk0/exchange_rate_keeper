@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseController extends AbstractController
 {
@@ -12,13 +13,13 @@ abstract class BaseController extends AbstractController
         return $this->json($data);
     }
 
-    public function notFound(mixed $data): JsonResponse
+    public function createResponseNotFound(mixed $data): JsonResponse
     {
-        return $this->json($data, 404);
+        return $this->json($data, Response::HTTP_NOT_FOUND);
     }
 
-    public function internalServerError(mixed $data): JsonResponse
+    public function createResponseInternalServerError(mixed $data): JsonResponse
     {
-        return $this->json($data, 500);
+        return $this->json($data, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

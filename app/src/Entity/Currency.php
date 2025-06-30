@@ -66,11 +66,23 @@ class Currency
         return $this->humanName;
     }
 
-    public function update(CurrencyUpdateDto $dto)
+    public function setCode(string $code): void
     {
-        $dto->code ? $this->code = $dto->code : null;
-        $dto->char ? $this->char = $dto->char : null;
-        $dto->nominal ? $this->nominal = $dto->nominal : null;
-        $dto->humanName ? $this->humanName = $dto->humanName : null;
+        $this->code = $code;
+    }
+
+    public function setChar(string $char): void
+    {
+        $this->char = $char;
+    }
+
+    public function setNominal(int $nominal): void
+    {
+        $this->nominal = $nominal;
+    }
+
+    public function setHumanName(string $humanName): void
+    {
+        $this->humanName = $humanName;
     }
 }

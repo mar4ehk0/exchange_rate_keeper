@@ -37,24 +37,27 @@ class CurrencyService
         return $currency;
     }
 
-    public function updateCurrency(int $id, CurrencyUpdateDto $updateDto): ?Currency
+    public function updateCurrency(int $id, CurrencyUpdateDto $dto): ?Currency
     {
         $currency = $this->getCurrencyById($id);
 
-        if (!$currency) return null;
+        if (!$currency instanceof Currency) return null;
 
-        $currency->update($updateDto);
+        $dto->code? $currency->setCode($dto->code) : null;
+        $dto->char ? $currency->setChar($dto->char) : null;
+        $dto->nominal ? $currency->setNominal($dto->nominal) : null;
+        $dto->humanName ? $currency->setHumanName($dto->humanName) : null;
 
         $this->entityManager->flush();
 
         return $currency;
     }
 
-    public function deleteCurrency(int $id): mixed
+    public function deleteCurrency(int $id): bool
     {
         $currency = $this->getCurrencyById($id);
 
-        if (!$currency) return null;
+        if (!$currency instanceof Currency) return false;
 
         $this->entityManager->remove($currency);
 

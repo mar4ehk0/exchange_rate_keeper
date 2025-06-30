@@ -41,7 +41,7 @@ class CurrencyController extends BaseController
         $currency = $this->currencyService->getCurrencyById($id);
 
         if (!$currency instanceof Currency) {
-            return $this->notFound(['error' => 'Not found']);
+            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
 
         return $this->json([
@@ -65,7 +65,7 @@ class CurrencyController extends BaseController
 
         $currency = $this->currencyService->updateCurrency($id, $dto);
         if (!$currency instanceof Currency) {
-            return $this->notFound(['error' => 'Not found']);
+            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
 
         return $this->json([
@@ -80,13 +80,12 @@ class CurrencyController extends BaseController
     #[Route('/currency/{id}', name:'currency_delete', methods: ['DELETE'])]
     public function deleteCurrency(int $id): JsonResponse
     {
-        $currency = $this->currencyService->getCurrencyById($id);
-        if (!$currency instanceof Currency) {
-            return $this->notFound(['error' => 'Not found']);
+        $deleted = $this->currencyService->deleteCurrency($id);
+
+        if (!$deleted) {
+            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
 
-        $delete = $this->currencyService->deleteCurrency($id);
-
-        return $delete ? $this->createResponseSuccess(["success" => "Currency successfully deleted"]) :  $this->notFound(['error' => 'Not found']);
+        return $this->createResponseSuccess(["success" => "Currency successfully deleted"]);
     }
 }
