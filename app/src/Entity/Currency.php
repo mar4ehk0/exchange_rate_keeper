@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DTO\CurrencyUpdateDto;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
@@ -63,5 +64,13 @@ class Currency
     public function getHumanName(): string
     {
         return $this->humanName;
+    }
+
+    public function update(CurrencyUpdateDto $dto)
+    {
+        $dto->code ? $this->code = $dto->code : null;
+        $dto->char ? $this->char = $dto->char : null;
+        $dto->nominal ? $this->nominal = $dto->nominal : null;
+        $dto->humanName ? $this->humanName = $dto->humanName : null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\CurrencyUpdateDto;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,14 +17,11 @@ class CurrencyController extends BaseController {
     #[Route('/currency', name:'currency_create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
         $dto = new CurrencyCreationDto(
-            $request->get('code'), // используй так, дает больше поведения
-//            $data['code'],
-            $data['char'],
-            $data['nominal'],
-            $data['humanName']
+            $request->get('code'),
+            $request->get('char'),
+            $request->get('nominal'),
+            $request->get('humanName'),
         );
 
         $currency = $this->currencyService->createCurrency($dto);
@@ -44,7 +42,33 @@ class CurrencyController extends BaseController {
 
         $currency = $this->currencyService->getCurrencyById($dto);
         if (!$currency) {
-            return $this->json(['error' => 'Not found'], 404);
+            return $this->createResponseError(['error' => 'Not found'], 404);
+        }
+
+        return $this->json([
+            'code' => $currency->getCode(),
+            'char' => $currency->getChar(),
+            'nominal' => $currency->getNominal(),
+            'humanName' => $currency->getHumanName(),
+        ]);
+
+    }
+
+    #[Route('/currency/{id}', name:'currency_update', methods: ['POST'])]
+    public function updateCurrency(int $id, Request $request): JsonResponse
+    {
+        $dto = new CurrencyGetDto($id);
+
+        $updateDto = new CurrencyUpdateDto(
+            $request->get('code'),
+            $request->get('char'),
+            $request->get('nominal'),
+            $request->get('humanName'),
+        );
+
+        $currency = $this->currencyService->updateCurrency($dto, $updateDto);
+        if (!$currency) {
+            return $this->createResponseError(['error' => 'Not found'], 404);
         }
 
         return $this->json([
