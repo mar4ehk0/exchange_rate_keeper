@@ -17,6 +17,8 @@ class CurrencyController extends BaseController
     #[Route('/currency', name:'currency_create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
+        dd($request->getPayload());
+
         $dto = new CurrencyCreationDto(
             $request->get('code'),
             $request->get('char'),
