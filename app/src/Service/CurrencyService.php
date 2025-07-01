@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
-use App\DTO\CurrencyCreationDto;
 use App\Entity\Currency;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\DTO\CurrencyCreationDto;
+use App\DTO\CurrencyUpdateDto;
 
 class CurrencyService
 {
@@ -15,11 +16,13 @@ class CurrencyService
     ) {
     }
 
+    public function getCurrencyById(int $id): ?Currency
+    {
+        return $this->currencyRepository->getById($id);
+    }
+
     public function createCurrency(CurrencyCreationDto $dto): Currency
     {
-        // сделать crud - для Currency
-        // использовать dto
-
         $currency = new Currency(
             $dto->code,
             $dto->char,
@@ -32,5 +35,34 @@ class CurrencyService
         $this->entityManager->flush();
 
         return $currency;
+    }
+
+    public function updateCurrency(int $id, CurrencyUpdateDto $dto): ?Currency
+    {
+        $currency = $this->getCurrencyById($id);
+
+        if (!$currency instanceof Currency) return null;
+
+        $dto->code? $currency->setCode($dto->code) : null;
+        $dto->char ? $currency->setChar($dto->char) : null;
+        $dto->nominal ? $currency->setNominal($dto->nominal) : null;
+        $dto->humanName ? $currency->setHumanName($dto->humanName) : null;
+
+        $this->entityManager->flush();
+
+        return $currency;
+    }
+
+    public function deleteCurrency(int $id): bool
+    {
+        $currency = $this->getCurrencyById($id);
+
+        if (!$currency instanceof Currency) return false;
+
+        $this->entityManager->remove($currency);
+
+        $this->entityManager->flush();
+
+        return true;
     }
 }

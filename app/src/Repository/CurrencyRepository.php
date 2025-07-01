@@ -27,8 +27,9 @@ class CurrencyRepository
         $this->entityManager->remove($currency);
     }
 
-    public function getById(int $id)
+    public function getById(int $id): ?Currency
     {
-        // написать реализацию
+        return $this->repo->find($id);
     }
+
 }
