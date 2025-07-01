@@ -2,7 +2,9 @@
 
 namespace App\DTO;
 
-readonly class CurrencyCreationDto
+use App\Interface\JsonBodyDtoRequestInterface;
+
+readonly class CurrencyCreationDto implements JsonBodyDtoRequestInterface
 {
     public function __construct(
         public string $code,

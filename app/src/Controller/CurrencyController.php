@@ -15,14 +15,14 @@ class CurrencyController extends BaseController
     public function __construct(private CurrencyService $currencyService) {}
 
     #[Route('/currency', name:'currency_create', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    public function create(CurrencyCreationDto $dto): JsonResponse
     {
-        $dto = new CurrencyCreationDto(
-            $request->get('code'),
-            $request->get('char'),
-            $request->get('nominal'),
-            $request->get('humanName'),
-        );
+//        $dto = new CurrencyCreationDto(
+//            $request->get('code'),
+//            $request->get('char'),
+//            $request->get('nominal'),
+//            $request->get('humanName'),
+//        );
 
         $currency = $this->currencyService->createCurrency($dto);
 
