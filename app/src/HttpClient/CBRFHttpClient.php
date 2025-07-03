@@ -35,9 +35,12 @@ class CBRFHttpClient
                 throw new Exception('Cannot retrieve response status code');
             }
 
-            // сделай проверку тут что есть заголовок content-type, и что в нем есть значение
-            // если нет заголовка то кидай исключение
-            $contentType = $response->getHeaders()['content-type'][0];
+            $headers = $response->getHeaders();
+            if (empty($headers['content-type']) && !empty($headers['content-type'][0])) {
+                throw new Exception('Content-Type in headers is empty');
+            }
+
+            $contentType = $headers['content-type'][0];
             $rawData = $response->getContent();
 
             return new CBRFHttpClientResultDto(contentType: $contentType, rawContent: $rawData);

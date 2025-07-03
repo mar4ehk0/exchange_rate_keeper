@@ -21,6 +21,11 @@ class CurrencyService
         return $this->currencyRepository->getById($id);
     }
 
+    public function getCurrencyByCode(string $code): ?Currency
+    {
+        return $this->currencyRepository->getByCode($code);
+    }
+
     public function createCurrency(CurrencyCreationDto $dto): Currency
     {
         $currency = new Currency(
