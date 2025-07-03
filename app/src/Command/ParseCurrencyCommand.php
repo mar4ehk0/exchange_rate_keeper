@@ -2,9 +2,13 @@
 
 namespace App\Command;
 
+use App\DTO\CurrencyCreationDto;
+use App\DTO\CurrencyUpdateDto;
+use App\Entity\Currency;
 use App\Exception\CBRFHttpClientException;
 use App\Fabric\CBRFParserFabric;
 use App\HttpClient\CBRFHttpClient;
+use App\Service\CurrencyService;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -19,7 +23,8 @@ class ParseCurrencyCommand extends Command
     public function __construct(
         private CBRFHttpClient $client,
         private CBRFParserFabric $parserFabric,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private CurrencyService $currencyService
     ) {
         parent::__construct();
     }
