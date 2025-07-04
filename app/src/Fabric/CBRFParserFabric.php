@@ -9,8 +9,8 @@ use Exception;
 
 class CBRFParserFabric
 {
-    public const CONTENT_TYPE_XML = "text/xml";
-    public const CONTENT_TYPE_JSON = "application/json";
+    private const CONTENT_TYPE_XML = "text/xml";
+    private const CONTENT_TYPE_JSON = "application/json";
 
     /**
      * @throws Exception

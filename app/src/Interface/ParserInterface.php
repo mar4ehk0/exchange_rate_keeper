@@ -2,12 +2,14 @@
 
 namespace App\Interface;
 
-use App\Entity\Currency;
+use App\DTO\ResultDtoParser;
+use App\Exception\CannotParseStructException;
 
 interface ParserInterface
 {
     /**
-     * @return Currency[]
+     * @return ResultDtoParser[]
+     * @throws CannotParseStructException
      */
     public function parse(string $rawContent): array;
 }
