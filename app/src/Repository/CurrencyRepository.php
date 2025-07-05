@@ -32,4 +32,13 @@ class CurrencyRepository
         return $this->repo->find($id);
     }
 
+    public function getByCode(string $code): ?Currency
+    {
+        return $this->repo->findOneBy(['code' => $code]);
+    }
+
+    public function getAll(): array
+    {
+        return $this->repo->findAll();
+    }
 }
