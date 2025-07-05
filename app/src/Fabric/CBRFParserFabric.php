@@ -2,6 +2,7 @@
 
 namespace App\Fabric;
 
+use Symfony\Component\Serializer\SerializerInterface;
 use App\Interface\ParserInterface;
 use App\Parser\JsonParser;
 use App\Parser\XmlParser;
@@ -9,6 +10,8 @@ use Exception;
 
 class CBRFParserFabric
 {
+    public function __construct(private SerializerInterface $serializer)
+    {}
     private const CONTENT_TYPE_XML = "text/xml";
     private const CONTENT_TYPE_JSON = "application/json";
 
@@ -19,7 +22,7 @@ class CBRFParserFabric
     {
         switch ($contentType) {
             case self::CONTENT_TYPE_XML:
-                return new XmlParser();
+                return new XmlParser($this->serializer);
             case self::CONTENT_TYPE_JSON:
                 return new JsonParser();
             default:

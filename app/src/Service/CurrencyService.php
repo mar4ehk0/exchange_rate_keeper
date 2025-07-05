@@ -88,4 +88,9 @@ class CurrencyService
 
         return true;
     }
+
+    public function getAllCurrencies(): array
+    {
+        return $this->currencyRepository->getAll();
+    }
 }

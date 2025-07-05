@@ -36,4 +36,9 @@ class CurrencyRepository
     {
         return $this->repo->findOneBy(['code' => $code]);
     }
+
+    public function getAll(): array
+    {
+        return $this->repo->findAll();
+    }
 }
