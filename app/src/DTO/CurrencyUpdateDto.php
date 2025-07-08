@@ -10,7 +10,7 @@ readonly class CurrencyUpdateDto
         public ?string $char = null,
         public ?int $nominal  = null,
         public ?string $humanName = null,
-    ){
+    ) {
     }
 
 }

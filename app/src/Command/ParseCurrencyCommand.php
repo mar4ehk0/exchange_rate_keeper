@@ -5,12 +5,15 @@ namespace App\Command;
 use App\DTO\CurrencyRateCreationDto;
 use App\DTO\ResultDtoParser;
 use App\Entity\Currency;
+use App\Entity\CurrencyRate;
 use App\Exception\CannotParseStructException;
 use App\Exception\CBRFHttpClientException;
 use App\Fabric\CBRFParserFabric;
 use App\HttpClient\CBRFHttpClient;
+use App\Repository\CurrencyRateRepository;
 use App\Service\CurrencyRateService;
 use App\Service\CurrencyService;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -29,7 +32,8 @@ class ParseCurrencyCommand extends Command
         private CBRFParserFabric $parserFabric,
         private LoggerInterface $logger,
         private CurrencyService $currencyService,
-        private CurrencyRateService $currencyRateService
+        private EntityManagerInterface $entityManager,
+        private CurrencyRateRepository $currencyRateRepository
     ) {
         parent::__construct();
     }
@@ -77,21 +81,22 @@ class ParseCurrencyCommand extends Command
                     continue;
                 }
 
-                $currencyRateDto = new CurrencyRateCreationDto(
+                $currencyRate = new CurrencyRate(
                     $currency,
                     $item->valueRate,
                     new \DateTimeImmutable()
                 );
 
-                $this->currencyRateService->createCurrencyRate($currencyRateDto);
+                $this->currencyRateRepository->add($currencyRate);
 
-            }catch (Throwable $e){
+            } catch (Throwable $e) {
                 $this->logger->error("Ошибка при обработке валюты", [
                     'exception' => $e,
                     'item' => $item
                 ]);
             }
         }
+
+        $this->entityManager->flush();
     }
 }
-

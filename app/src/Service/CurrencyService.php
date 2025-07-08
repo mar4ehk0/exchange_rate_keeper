@@ -50,11 +50,11 @@ class CurrencyService
             return null;
         }
 
-//        как то это я пропустил. так не делай. делай явно
-//        $dto->code ? $currency->setCode($dto->code) : null;
-//        $dto->char ? $currency->setChar($dto->char) : null;
-//        $dto->nominal ? $currency->setNominal($dto->nominal) : null;
-//        $dto->humanName ? $currency->setHumanName($dto->humanName) : null;
+        //        как то это я пропустил. так не делай. делай явно
+        //        $dto->code ? $currency->setCode($dto->code) : null;
+        //        $dto->char ? $currency->setChar($dto->char) : null;
+        //        $dto->nominal ? $currency->setNominal($dto->nominal) : null;
+        //        $dto->humanName ? $currency->setHumanName($dto->humanName) : null;
 
         if ($dto->code !== null) {
             $currency->setCode($dto->code);

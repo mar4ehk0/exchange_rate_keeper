@@ -11,5 +11,6 @@ readonly class CurrencyRateCreationDto
         public Currency $currency,
         public string $value,
         public DateTimeImmutable $datetimeRate
-    ){}
+    ) {
+    }
 }

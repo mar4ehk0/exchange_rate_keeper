@@ -11,7 +11,8 @@ use Exception;
 class CBRFParserFabric
 {
     public function __construct(private SerializerInterface $serializer)
-    {}
+    {
+    }
     private const CONTENT_TYPE_XML = "text/xml";
     private const CONTENT_TYPE_JSON = "application/json";
 
@@ -26,7 +27,7 @@ class CBRFParserFabric
             case self::CONTENT_TYPE_JSON:
                 return new JsonParser();
             default:
-                throw new Exception(sprintf('Parser does not implemented for content type: %s',$contentType));
+                throw new Exception(sprintf('Parser does not implemented for content type: %s', $contentType));
         }
     }
 }

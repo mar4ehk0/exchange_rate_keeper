@@ -30,8 +30,8 @@ class CurrencyRate
 
     public function __construct(
         Currency $currency,
+        string $value,
         DateTimeImmutable $datetimeRate,
-        string $value
     ) {
         $this->datetimeRate = $datetimeRate;
         $this->currency = $currency;
