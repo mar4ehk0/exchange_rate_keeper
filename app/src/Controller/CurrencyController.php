@@ -47,14 +47,12 @@ class CurrencyController extends BaseController
         if (!$currency instanceof Currency) {
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
-
         return $this->json([
             'code' => $currency->getCode(),
             'char' => $currency->getChar(),
             'nominal' => $currency->getNominal(),
             'humanName' => $currency->getHumanName(),
         ]);
-
     }
 
     #[Route('/currency/{id}', name:'currency_update', methods: ['POST'])]
@@ -81,7 +79,6 @@ class CurrencyController extends BaseController
             'nominal' => $currency->getNominal(),
             'humanName' => $currency->getHumanName(),
         ]);
-
     }
 
     #[Route('/currency/{id}', name:'currency_delete', methods: ['DELETE'])]
@@ -93,7 +90,6 @@ class CurrencyController extends BaseController
         if (!$deleted) {
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
-
         return $this->createResponseSuccess(["success" => "Currency successfully deleted"]);
     }
 }
