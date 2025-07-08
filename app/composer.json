@@ -1,4 +1,6 @@
 {
+    "name": "some/exchange_rate_keeper",
+    "description": "exchange rate keeper",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
