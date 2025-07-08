@@ -2,22 +2,21 @@
 
 namespace App\Fabric;
 
-use Symfony\Component\Serializer\SerializerInterface;
 use App\Interface\ParserInterface;
 use App\Parser\JsonParser;
 use App\Parser\XmlParser;
-use Exception;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CBRFParserFabric
 {
     public function __construct(private SerializerInterface $serializer)
     {
     }
-    private const CONTENT_TYPE_XML = "text/xml";
-    private const CONTENT_TYPE_JSON = "application/json";
+    private const CONTENT_TYPE_XML = 'text/xml';
+    private const CONTENT_TYPE_JSON = 'application/json';
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function create(string $contentType): ParserInterface
     {
@@ -27,7 +26,7 @@ class CBRFParserFabric
             case self::CONTENT_TYPE_JSON:
                 return new JsonParser();
             default:
-                throw new Exception(sprintf('Parser does not implemented for content type: %s', $contentType));
+                throw new \Exception(sprintf('Parser does not implemented for content type: %s', $contentType));
         }
     }
 }

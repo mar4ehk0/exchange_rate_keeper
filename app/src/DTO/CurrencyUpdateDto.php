@@ -8,9 +8,8 @@ readonly class CurrencyUpdateDto
         public int $id,
         public ?string $code = null,
         public ?string $char = null,
-        public ?int $nominal  = null,
+        public ?int $nominal = null,
         public ?string $humanName = null,
     ) {
     }
-
 }

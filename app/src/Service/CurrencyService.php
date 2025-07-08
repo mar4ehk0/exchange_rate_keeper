@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
+use App\DTO\CurrencyCreationDto;
+use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\DTO\CurrencyCreationDto;
-use App\DTO\CurrencyUpdateDto;
 
 class CurrencyService
 {
@@ -56,16 +56,16 @@ class CurrencyService
         //        $dto->nominal ? $currency->setNominal($dto->nominal) : null;
         //        $dto->humanName ? $currency->setHumanName($dto->humanName) : null;
 
-        if ($dto->code !== null) {
+        if (null !== $dto->code) {
             $currency->setCode($dto->code);
         }
-        if ($dto->char !== null) {
+        if (null !== $dto->char) {
             $currency->setChar($dto->char);
         }
-        if ($dto->nominal !== null) {
+        if (null !== $dto->nominal) {
             $currency->setNominal($dto->nominal);
         }
-        if ($dto->humanName !== null) {
+        if (null !== $dto->humanName) {
             $currency->setHumanName($dto->humanName);
         }
 
