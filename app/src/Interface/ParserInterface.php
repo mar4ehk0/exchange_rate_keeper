@@ -9,6 +9,7 @@ interface ParserInterface
 {
     /**
      * @return ResultDtoParser[]
+     *
      * @throws CannotParseStructException
      */
     public function parse(string $rawContent): array;

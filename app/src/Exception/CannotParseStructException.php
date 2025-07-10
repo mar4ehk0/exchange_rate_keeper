@@ -2,8 +2,6 @@
 
 namespace App\Exception;
 
-use Exception;
-
-class CannotParseStructException extends Exception
+class CannotParseStructException extends \Exception
 {
 }

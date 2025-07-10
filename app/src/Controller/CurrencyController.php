@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Service\CurrencyService;
-use App\DTO\CurrencyCreationDto;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CurrencyController extends BaseController
 {
@@ -16,7 +16,7 @@ class CurrencyController extends BaseController
     {
     }
 
-    #[Route('/currency', name:'currency_create', methods: ['POST'])]
+    #[Route('/currency', name: 'currency_create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу
@@ -39,7 +39,7 @@ class CurrencyController extends BaseController
         ]);
     }
 
-    #[Route('/currency/{id}', name:'get_currency', methods: ['GET'])]
+    #[Route('/currency/{id}', name: 'get_currency', methods: ['GET'])]
     public function getCurrency(int $id): JsonResponse
     {
         $currency = $this->currencyService->getCurrencyById($id);
@@ -54,10 +54,9 @@ class CurrencyController extends BaseController
             'nominal' => $currency->getNominal(),
             'humanName' => $currency->getHumanName(),
         ]);
-
     }
 
-    #[Route('/currency/{id}', name:'currency_update', methods: ['POST'])]
+    #[Route('/currency/{id}', name: 'currency_update', methods: ['POST'])]
     public function updateCurrency(int $id, Request $request): JsonResponse
     {
         $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу
@@ -81,10 +80,9 @@ class CurrencyController extends BaseController
             'nominal' => $currency->getNominal(),
             'humanName' => $currency->getHumanName(),
         ]);
-
     }
 
-    #[Route('/currency/{id}', name:'currency_delete', methods: ['DELETE'])]
+    #[Route('/currency/{id}', name: 'currency_delete', methods: ['DELETE'])]
     public function deleteCurrency(int $id): JsonResponse
     {
         $deleted = $this->currencyService->deleteCurrency($id);
@@ -94,6 +92,6 @@ class CurrencyController extends BaseController
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
 
-        return $this->createResponseSuccess(["success" => "Currency successfully deleted"]);
+        return $this->createResponseSuccess(['success' => 'Currency successfully deleted']);
     }
 }

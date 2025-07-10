@@ -9,5 +9,6 @@ readonly class CurrencyCreationDto
         public string $char,
         public int $nominal,
         public string $humanName,
-    ) {}
+    ) {
+    }
 }

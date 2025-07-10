@@ -11,8 +11,8 @@ class CurrencyRateService
 {
     public function __construct(
         private CurrencyRateRepository $currencyRateRepository,
-        private EntityManagerInterface $entityManager
-    ){
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function createCurrencyRate(CurrencyRateCreationDto $dto): CurrencyRate
@@ -29,5 +29,4 @@ class CurrencyRateService
 
         return $currencyRate;
     }
-
 }
