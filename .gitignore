@@ -8,6 +8,8 @@
 /app/.php-cs-fixer.cache
 /app/bin/*
 !/app/bin/console
+/app/phpunit.xml
+/app/.phpunit.cache/
 
 docker/.env
 docker/postgres/data
