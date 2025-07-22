@@ -12,7 +12,9 @@ use App\DTO\CurrencyCreationDto;
 
 class CurrencyController extends BaseController
 {
-    public function __construct(private CurrencyService $currencyService) {}
+    public function __construct(private CurrencyService $currencyService)
+    {
+    }
 
     #[Route('/currency', name:'currency_create', methods: ['POST'])]
     public function create(CurrencyCreationDto $dto): JsonResponse
@@ -56,14 +58,17 @@ class CurrencyController extends BaseController
     #[Route('/currency/{id}', name:'currency_update', methods: ['POST'])]
     public function updateCurrency(int $id, Request $request): JsonResponse
     {
+        $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу
+
         $dto = new CurrencyUpdateDto(
-            $request->get('code'),
-            $request->get('char'),
-            $request->get('nominal'),
-            $request->get('humanName'),
+            $id, // клади в dto для обновления и id
+            $data['code'] ?? '',
+            $data['char'] ?? '',
+            isset($data['nominal']) ? (int) $data['nominal'] : 0,
+            $data['humanName'] ?? '',
         );
 
-        $currency = $this->currencyService->updateCurrency($id, $dto);
+        $currency = $this->currencyService->updateCurrency($dto);
         if (!$currency instanceof Currency) {
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
@@ -82,6 +87,7 @@ class CurrencyController extends BaseController
     {
         $deleted = $this->currencyService->deleteCurrency($id);
 
+        // оставлю тут коммент, потому что тут вообще странное все делается, не удален значит not found
         if (!$deleted) {
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[Entity()]
 #[Table(name: 'currency')]
-class Currency
+class Currency // пользователь, админ // руб, доллар, суммы, тенге, евро
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::INTEGER)]
