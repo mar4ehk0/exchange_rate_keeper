@@ -67,11 +67,11 @@ shell_root:
 
 .PHONY: cs-check
 cs-check: ## Checks Code Style PHP
-	docker exec -ti ${APP_CONTAINER_NAME} php ./vendor/bin/php-cs-fixer check --diff
+	docker exec -ti ${APP_CONTAINER_NAME} php ./bin/php-cs-fixer check --diff
 
 .PHONY: cs-fix
 cs-fix: ## Fixes Code Style PHP
-	docker exec -ti ${APP_CONTAINER_NAME} php ./vendor/bin/php-cs-fixer fix --diff
+	docker exec -ti ${APP_CONTAINER_NAME} php ./bin/php-cs-fixer fix --diff
 
 .PHONY: set_host
 set_host: ## Set link in /etc/hosts

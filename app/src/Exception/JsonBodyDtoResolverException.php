@@ -2,13 +2,11 @@
 
 namespace App\Exception;
 
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
-class JsonBodyDtoResolverException extends Exception
+class JsonBodyDtoResolverException extends \Exception
 {
-    public function __construct(Throwable $previous)
+    public function __construct(\Throwable $previous)
     {
         $msg = 'Bad Request';
         parent::__construct($msg, Response::HTTP_BAD_REQUEST, $previous);

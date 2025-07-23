@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Serializer\SerializerInterface;
-use Throwable;
 
 class JsonBodyDtoResolver implements ValueResolverInterface
 {
@@ -23,9 +22,9 @@ class JsonBodyDtoResolver implements ValueResolverInterface
         $type = $argument->getType();
 
         if (
-            $type === null ||
-            !is_subclass_of($type, JsonBodyDtoRequestInterface::class) ||
-            $request->getContentTypeFormat() !== self::CONTENT_TYPE_JSON
+            null === $type
+            || !is_subclass_of($type, JsonBodyDtoRequestInterface::class)
+            || self::CONTENT_TYPE_JSON !== $request->getContentTypeFormat()
         ) {
             return [];
         }
@@ -34,8 +33,9 @@ class JsonBodyDtoResolver implements ValueResolverInterface
 
         try {
             $dto = $this->serializer->deserialize($data, $type, self::CONTENT_TYPE_JSON);
+
             return [$dto];
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             throw new JsonBodyDtoResolverException($e);
         }
     }
