@@ -5,21 +5,17 @@ namespace App\Controller;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
-use App\Repository\CurrencyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\CurrencyService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\CurrencyService;
-use App\DTO\CurrencyCreationDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CurrencyController extends BaseController
 {
     public function __construct(
         private CurrencyService $currencyService,
-        private ValidatorInterface $validator,
+        private ValidatorInterface $validator
     ) {
     }
 
