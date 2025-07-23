@@ -4,27 +4,30 @@ namespace App\Controller;
 
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
+use App\Repository\CurrencyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\CurrencyService;
 use App\DTO\CurrencyCreationDto;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CurrencyController extends BaseController
 {
-    public function __construct(private CurrencyService $currencyService)
-    {
+    public function __construct(
+        private CurrencyService $currencyService,
+        private ValidatorInterface $validator,
+    ) {
     }
 
     #[Route('/currency', name:'currency_create', methods: ['POST'])]
     public function create(CurrencyCreationDto $dto): JsonResponse
     {
-//        $dto = new CurrencyCreationDto(
-//            $request->get('code'),
-//            $request->get('char'),
-//            $request->get('nominal'),
-//            $request->get('humanName'),
-//        );
+        $errors = $this->validator->validate($dto);
+
+        if (count($errors) > 0) {
+            return $this->createResponseBadRequest($errors);
+        }
 
         $currency = $this->currencyService->createCurrency($dto);
 
