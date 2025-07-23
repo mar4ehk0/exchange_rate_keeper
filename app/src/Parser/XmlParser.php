@@ -3,12 +3,8 @@
 namespace App\Parser;
 
 use App\DTO\ResultDtoParser;
-use App\Entity\Currency;
 use App\Exception\CannotParseStructException;
 use App\Interface\ParserInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class XmlParser implements ParserInterface
@@ -19,6 +15,7 @@ class XmlParser implements ParserInterface
 
     /**
      * @return ResultDtoParser[]
+     *
      * @throws CannotParseStructException
      */
     public function parse(string $rawContent): array

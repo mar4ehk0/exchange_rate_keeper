@@ -2,9 +2,7 @@
 
 namespace App\Exception;
 
-use Exception;
-
-class CBRFHttpClientException extends Exception
+class CBRFHttpClientException extends \Exception
 {
     public function __construct(string $message)
     {

@@ -2,24 +2,21 @@
 
 namespace App\Command;
 
-use App\DTO\CurrencyRateCreationDto;
 use App\DTO\ResultDtoParser;
 use App\Entity\Currency;
+use App\Entity\CurrencyRate;
 use App\Exception\CannotParseStructException;
 use App\Exception\CBRFHttpClientException;
 use App\Fabric\CBRFParserFabric;
 use App\HttpClient\CBRFHttpClient;
-use App\Service\CurrencyRateService;
+use App\Repository\CurrencyRateRepository;
 use App\Service\CurrencyService;
-use Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpClient\Exception\ClientException;
-use Symfony\Component\Serializer\SerializerInterface;
-use Throwable;
 
 #[AsCommand(name: 'app:parse-currency', description: 'Parse currency')]
 class ParseCurrencyCommand extends Command
@@ -29,7 +26,8 @@ class ParseCurrencyCommand extends Command
         private CBRFParserFabric $parserFabric,
         private LoggerInterface $logger,
         private CurrencyService $currencyService,
-        private CurrencyRateService $currencyRateService
+        private EntityManagerInterface $entityManager,
+        private CurrencyRateRepository $currencyRateRepository,
     ) {
         parent::__construct();
     }
@@ -44,21 +42,23 @@ class ParseCurrencyCommand extends Command
             $result = $parser->parse($dto->rawContent); // result будет содержать массив объектов Currency которые надо будет сохранить
 
             $this->save($result);
-
         } catch (CBRFHttpClientException $e) {
             $this->logger->error($e->getMessage());
 
             $output->writeln('<error>Сервер ЦБ РФ имеет сетевые проблемы.</error>');
+
             return Command::FAILURE;
         } catch (CannotParseStructException $e) {
             $this->logger->error($e->getMessage());
 
             $output->writeln('<error>ЦБ РФ изменил структуру ответа.</error>');
+
             return Command::INVALID;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
 
             $output->writeln('<error>Ошибка! Проверь логи.</error>');
+
             return Command::INVALID;
         }
 
@@ -77,21 +77,21 @@ class ParseCurrencyCommand extends Command
                     continue;
                 }
 
-                $currencyRateDto = new CurrencyRateCreationDto(
+                $currencyRate = new CurrencyRate(
                     $currency,
                     $item->valueRate,
                     new \DateTimeImmutable()
                 );
 
-                $this->currencyRateService->createCurrencyRate($currencyRateDto);
-
-            }catch (Throwable $e){
-                $this->logger->error("Ошибка при обработке валюты", [
+                $this->currencyRateRepository->add($currencyRate);
+            } catch (\Throwable $e) {
+                $this->logger->error('Ошибка при обработке валюты', [
                     'exception' => $e,
-                    'item' => $item
+                    'item' => $item,
                 ]);
             }
         }
+
+        $this->entityManager->flush();
     }
 }
-

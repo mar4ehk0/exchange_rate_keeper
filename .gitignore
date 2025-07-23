@@ -4,6 +4,12 @@
 /app/*.lst
 /app/phpstan.neon
 /app/var/
+/app/.php-cs-fixer.php
+/app/.php-cs-fixer.cache
+/app/bin/*
+!/app/bin/console
+/app/phpunit.xml
+/app/.phpunit.cache/
 
 docker/.env
 docker/postgres/data

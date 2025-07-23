@@ -16,5 +16,6 @@ readonly class CurrencyCreationDto implements JsonBodyDtoRequestInterface
         public int $nominal,
         #[Assert\NotBlank]
         public string $humanName,
-    ) {}
+    ) {
+    }
 }
