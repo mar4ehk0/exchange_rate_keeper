@@ -1,0 +1,1 @@
+{"version":1,"defects":{"App\\Tests\\ExampleTest::testBasicTest":5},"times":{"App\\Tests\\Fabric\\CBRFParserFabricTest::testCreateXmlParser":0,"App\\Tests\\Fabric\\CBRFParserFabricTest::testCreateJsonParser":0,"App\\Tests\\ExampleTest::testBasicTest":0.003}}

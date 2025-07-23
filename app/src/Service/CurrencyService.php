@@ -28,6 +28,8 @@ class CurrencyService
 
     public function createCurrency(CurrencyCreationDto $dto): Currency
     {
+        // сделатьт запрос есть ли уникальный code, если есть то кинуть исключение.
+
         $currency = new Currency(
             $dto->code,
             $dto->char,

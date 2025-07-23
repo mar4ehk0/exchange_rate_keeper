@@ -22,4 +22,9 @@ abstract class BaseController extends AbstractController
     {
         return $this->json($data, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function createResponseBadRequest(mixed $data): JsonResponse
+    {
+        return $this->json($data, Response::HTTP_BAD_REQUEST);
+    }
 }

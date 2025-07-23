@@ -9,24 +9,24 @@ use App\Service\CurrencyService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CurrencyController extends BaseController
 {
-    public function __construct(private CurrencyService $currencyService)
-    {
+    public function __construct(
+        private CurrencyService $currencyService,
+        private ValidatorInterface $validator,
+    ) {
     }
 
     #[Route('/currency', name: 'currency_create', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    public function create(CurrencyCreationDto $dto): JsonResponse
     {
-        $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу
+        $errors = $this->validator->validate($dto);
 
-        $dto = new CurrencyCreationDto(
-            $data['code'] ?? '',
-            $data['char'] ?? '',
-            isset($data['nominal']) ? (int) $data['nominal'] : 0,
-            $data['humanName'] ?? '',
-        );
+        if (count($errors) > 0) {
+            return $this->createResponseBadRequest($errors);
+        }
 
         $currency = $this->currencyService->createCurrency($dto);
 
