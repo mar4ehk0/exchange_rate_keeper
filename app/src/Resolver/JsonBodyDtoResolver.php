@@ -20,7 +20,6 @@ class JsonBodyDtoResolver implements ValueResolverInterface
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $type = $argument->getType();
-
         if (
             null === $type
             || !is_subclass_of($type, JsonBodyDtoRequestInterface::class)
