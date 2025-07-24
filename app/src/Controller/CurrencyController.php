@@ -7,7 +7,6 @@ use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
 use App\Service\CurrencyService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -59,7 +58,6 @@ class CurrencyController extends BaseController
     #[Route('/currency/{id}', name: 'currency_update', methods: ['POST'])]
     public function updateCurrency(int $id, CurrencyUpdateDto $dto): JsonResponse
     {
-
         dd($dto);
         dd(__DIR__);
         $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу

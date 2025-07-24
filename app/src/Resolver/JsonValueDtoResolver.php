@@ -4,7 +4,6 @@ namespace App\Resolver;
 
 use App\Exception\JsonBodyDtoResolverException;
 use App\Interface\JsonBodyDtoRequestInterface;
-use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
