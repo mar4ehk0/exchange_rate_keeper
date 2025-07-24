@@ -10,14 +10,14 @@ readonly class CurrencyUpdateDto implements JsonBodyDtoRequestInterface
     public function __construct(
         #[Assert\NotBlank]
         public int $id,
-        #[Assert\NotBlank]
-        public string $code,
-        #[Assert\NotBlank]
-        public string $char,
-        #[Assert\NotBlank]
-        public int $nominal,
-        #[Assert\NotBlank]
-        public string $humanName,
+        #[Assert\NotBlank(allowNull: true)]
+        public string|null $code,
+        #[Assert\NotBlank(allowNull: true)]
+        public string|null $char,
+        #[Assert\NotBlank(allowNull: true)]
+        public int|null $nominal,
+        #[Assert\NotBlank(allowNull: true)]
+        public string|null $humanName,
     ) {
     }
 }

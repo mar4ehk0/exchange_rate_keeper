@@ -61,10 +61,9 @@ class CurrencyController extends BaseController
         ]);
     }
 
-    #[Route('/currency/{id}', name: 'currency_update', methods: ['POST'])]
+    #[Route('/currency/{id}', name: 'currency_update', methods: ['PATCH'])]
     public function updateCurrency(CurrencyUpdateDto $dto): JsonResponse
     {
-        dd($dto);
         $errors = $this->validator->validate($dto);
 
         if (count($errors) > 0) {
@@ -73,7 +72,7 @@ class CurrencyController extends BaseController
 
         $currency = $this->currencyService->updateCurrency($dto);
         if (!$currency instanceof Currency) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $dto->id]);
         }
 
         return $this->json([
