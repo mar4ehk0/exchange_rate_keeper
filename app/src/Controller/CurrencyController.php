@@ -57,8 +57,11 @@ class CurrencyController extends BaseController
     }
 
     #[Route('/currency/{id}', name: 'currency_update', methods: ['POST'])]
-    public function updateCurrency(int $id, Request $request): JsonResponse
+    public function updateCurrency(int $id, CurrencyUpdateDto $dto): JsonResponse
     {
+
+        dd($dto);
+        dd(__DIR__);
         $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу
 
         $dto = new CurrencyUpdateDto(

@@ -2,7 +2,9 @@
 
 namespace App\DTO;
 
-readonly class CurrencyUpdateDto
+use App\Interface\JsonBodyDtoRequestInterface;
+
+readonly class CurrencyUpdateDto implements JsonBodyDtoRequestInterface
 {
     public function __construct(
         public int $id,

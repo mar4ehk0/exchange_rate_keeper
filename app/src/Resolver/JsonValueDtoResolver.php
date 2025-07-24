@@ -4,12 +4,13 @@ namespace App\Resolver;
 
 use App\Exception\JsonBodyDtoResolverException;
 use App\Interface\JsonBodyDtoRequestInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class JsonBodyDtoResolver implements ValueResolverInterface
+class JsonValueDtoResolver implements ValueResolverInterface
 {
     private const CONTENT_TYPE_JSON = 'json';
 
@@ -29,10 +30,13 @@ class JsonBodyDtoResolver implements ValueResolverInterface
             return [];
         }
 
-        $data = $request->getContent();
+        $data = $request->toArray();
+        if ($request->attributes->has('id')) {
+            $data['id'] = (int) $request->attributes->get('id');
+        }
 
         try {
-            $dto = $this->serializer->deserialize($data, $type, self::CONTENT_TYPE_JSON);
+            $dto = $this->serializer->denormalize($data, $type);
 
             return [$dto];
         } catch (\Throwable $e) {
