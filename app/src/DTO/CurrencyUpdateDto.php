@@ -3,6 +3,7 @@
 namespace App\DTO;
 
 use App\Interface\JsonBodyDtoRequestInterface;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 readonly class CurrencyUpdateDto implements JsonBodyDtoRequestInterface

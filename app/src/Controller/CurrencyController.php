@@ -8,7 +8,6 @@ use App\Entity\Currency;
 use App\Exception\CurrencyAlreadyExistsException;
 use App\Service\CurrencyService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
