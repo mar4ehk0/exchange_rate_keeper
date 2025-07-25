@@ -8,7 +8,6 @@ use App\Entity\Currency;
 use App\Exception\CurrencyAlreadyExistsException;
 use App\Service\CurrencyService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -31,7 +30,7 @@ class CurrencyController extends BaseController
 
         try {
             $currency = $this->currencyService->createCurrency($dto);
-        }catch (CurrencyAlreadyExistsException $e){
+        } catch (CurrencyAlreadyExistsException $e) {
             return $this->createResponseHttpConflict($e);
         }
 
@@ -81,7 +80,6 @@ class CurrencyController extends BaseController
             'nominal' => $currency->getNominal(),
             'humanName' => $currency->getHumanName(),
         ]);
-
     }
 
     #[Route('/currency/{id}', name: 'currency_delete', methods: ['DELETE'])]
@@ -91,7 +89,7 @@ class CurrencyController extends BaseController
 
         // оставлю тут коммент, потому что тут вообще странное все делается, не удален значит not found
         if (!$deleted) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+            return $this->createResponseInternalServerError(['class' => Currency::class, 'id' => $id]);
         }
 
         return $this->createResponseSuccess(['success' => 'Currency successfully deleted']);

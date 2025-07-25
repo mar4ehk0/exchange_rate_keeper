@@ -5,6 +5,7 @@ namespace App\Service;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
+use App\Exception\CurrencyAlreadyExistsException;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -29,6 +30,10 @@ class CurrencyService
     public function createCurrency(CurrencyCreationDto $dto): Currency
     {
         // сделатьт запрос есть ли уникальный code, если есть то кинуть исключение.
+        $currency = $this->getCurrencyByCode($dto->code);
+        if ($currency instanceof Currency) {
+            throw new CurrencyAlreadyExistsException("Currency with code '{$dto->code}' already exists");
+        }
 
         $currency = new Currency(
             $dto->code,
