@@ -47,7 +47,7 @@ class CurrencyController extends BaseController
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
 
-        return $this->json([
+        return $this->json([ // createResponseSuccess
             'code' => $currency->getCode(),
             'char' => $currency->getChar(),
             'nominal' => $currency->getNominal(),
@@ -75,7 +75,7 @@ class CurrencyController extends BaseController
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
 
-        return $this->json([
+        return $this->json([ // createResponseSuccess
             'code' => $currency->getCode(),
             'char' => $currency->getChar(),
             'nominal' => $currency->getNominal(),
