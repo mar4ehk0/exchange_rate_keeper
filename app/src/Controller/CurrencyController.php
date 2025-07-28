@@ -69,9 +69,13 @@ class CurrencyController extends BaseController
             return $this->createResponseBadRequest($errors);
         }
 
-        $currency = $this->currencyService->updateCurrency($dto);
-        if (!$currency instanceof Currency) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $dto->id]);
+        try {
+            $currency = $this->currencyService->updateCurrency($dto);
+            if (!$currency instanceof Currency) {
+                return $this->createResponseNotFound(['class' => Currency::class, 'id' => $dto->id]);
+            }
+        } catch (CurrencyAlreadyExistsException $e) {
+            return $this->createResponseHttpConflict(['class' => Currency::class, 'id' => $dto->id, 'message' => $e->getMessage()]);
         }
 
         return $this->json([

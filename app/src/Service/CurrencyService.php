@@ -52,9 +52,12 @@ class CurrencyService
     public function updateCurrency(CurrencyUpdateDto $dto): ?Currency
     {
         $currency = $this->getCurrencyById($dto->id);
-
         if (!$currency instanceof Currency) {
             return null;
+        }
+        $existingCurrency = $this->getCurrencyByCode($dto->code);
+        if ($existingCurrency && $existingCurrency->getId() !== $currency->getId()) {
+            throw new CurrencyAlreadyExistsException("Currency with code '{$dto->code}' already exists. Please choose a unique code.");
         }
 
         if (null !== $dto->code) {
