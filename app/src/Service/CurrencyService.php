@@ -5,9 +5,10 @@ namespace App\Service;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
+use App\Exception\CurrencyNotFoundException;
+use App\Exception\NotDeleteCurrencyException;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 
 class CurrencyService
 {
@@ -82,15 +83,16 @@ class CurrencyService
         $currency = $this->getCurrencyById($id);
 
         if (!$currency instanceof Currency) {
-            return false; // вместо bool должно кидать исключение. не найден notfoundExceptioon
+            throw new CurrencyNotFoundException("Currency with id {$id} not found");
         }
 
         try {
             $this->entityManager->remove($currency);
 
             $this->entityManager->flush();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // создай свое исключение NotDeleteCurrencyException и если есть секция catch то заворачивай все в это исключение
+            throw new NotDeleteCurrencyException($e);
         }
     }
 

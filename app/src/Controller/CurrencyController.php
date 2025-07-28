@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
+use App\Exception\CurrencyNotFoundException;
+use App\Exception\NotDeleteCurrencyException;
 use App\Service\CurrencyService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -86,11 +88,12 @@ class CurrencyController extends BaseController
     #[Route('/currency/{id}', name: 'currency_delete', methods: ['DELETE'])]
     public function deleteCurrency(int $id): JsonResponse
     {
-        $deleted = $this->currencyService->deleteCurrency($id);
-
-        // оставлю тут коммент, потому что тут вообще странное все делается, не удален значит not found
-        if (!$deleted) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+        try {
+            $this->currencyService->deleteCurrency($id);
+        } catch (CurrencyNotFoundException $exception) {
+            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id, 'message' => $exception->getMessage()]);
+        } catch (NotDeleteCurrencyException $exception) {
+            return $this->createResponseInternalServerError(['class' => Currency::class, 'id' => $id, 'message' => $exception->getMessage()]);
         }
 
         return $this->createResponseSuccess(['success' => 'Currency successfully deleted']);
