@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
+use App\Exception\CurrencyAlreadyExistsException;
 use App\Service\CurrencyService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +28,11 @@ class CurrencyController extends BaseController
             return $this->createResponseBadRequest($errors);
         }
 
-        $currency = $this->currencyService->createCurrency($dto);
+        try {
+            $currency = $this->currencyService->createCurrency($dto);
+        } catch (CurrencyAlreadyExistsException $e) {
+            return $this->createResponseHttpConflict($e);
+        }
 
         return $this->createResponseSuccess([
             'id' => $currency->getId(),
@@ -55,24 +60,22 @@ class CurrencyController extends BaseController
         ]);
     }
 
-    #[Route('/currency/{id}', name: 'currency_update', methods: ['POST'])]
-    public function updateCurrency(int $id, CurrencyUpdateDto $dto): JsonResponse
+    #[Route('/currency/{id}', name: 'currency_update', methods: ['PATCH'])]
+    public function updateCurrency(CurrencyUpdateDto $dto): JsonResponse
     {
-        dd($dto);
-        dd(__DIR__);
-        $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу
+        $errors = $this->validator->validate($dto);
 
-        $dto = new CurrencyUpdateDto(
-            $id, // клади в dto для обновления и id
-            $data['code'] ?? '',
-            $data['char'] ?? '',
-            isset($data['nominal']) ? (int) $data['nominal'] : 0,
-            $data['humanName'] ?? '',
-        );
+        if (count($errors) > 0) {
+            return $this->createResponseBadRequest($errors);
+        }
 
-        $currency = $this->currencyService->updateCurrency($dto);
-        if (!$currency instanceof Currency) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+        try {
+            $currency = $this->currencyService->updateCurrency($dto);
+            if (!$currency instanceof Currency) {
+                return $this->createResponseNotFound(['class' => Currency::class, 'id' => $dto->id]);
+            }
+        } catch (CurrencyAlreadyExistsException $e) {
+            return $this->createResponseHttpConflict(['class' => Currency::class, 'id' => $dto->id, 'message' => $e->getMessage()]);
         }
 
         return $this->json([
@@ -90,7 +93,7 @@ class CurrencyController extends BaseController
 
         // оставлю тут коммент, потому что тут вообще странное все делается, не удален значит not found
         if (!$deleted) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+            return $this->createResponseInternalServerError(['class' => Currency::class, 'id' => $id]);
         }
 
         return $this->createResponseSuccess(['success' => 'Currency successfully deleted']);
