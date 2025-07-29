@@ -7,6 +7,7 @@ use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
 use App\Exception\CurrencyAlreadyExistsException;
 use App\Service\CurrencyService;
+use App\View\CurrencyView;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -52,12 +53,9 @@ class CurrencyController extends BaseController
             return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
         }
 
-        return $this->createResponseSuccess([ // createResponseSuccess
-            'code' => $currency->getCode(),
-            'char' => $currency->getChar(),
-            'nominal' => $currency->getNominal(),
-            'humanName' => $currency->getHumanName(),
-        ]);
+        $view = new CurrencyView($currency);
+
+        return $this->createResponseSuccess($view->getData());
     }
 
     #[Route('/currency/{id}', name: 'currency_update', methods: ['PATCH'])]
