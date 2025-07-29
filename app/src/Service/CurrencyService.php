@@ -78,19 +78,19 @@ class CurrencyService
         return $currency;
     }
 
-    public function deleteCurrency(int $id): bool
+    public function deleteCurrency(int $id): void
     {
         $currency = $this->getCurrencyById($id);
 
         if (!$currency instanceof Currency) {
-            return false;
+            return false; // переделать на изключение, нет бросай исключение
         }
 
         $this->entityManager->remove($currency);
 
         $this->entityManager->flush();
 
-        return true;
+        return true; // удалить, ничего не возвращать.
     }
 
     public function getAllCurrencies(): array

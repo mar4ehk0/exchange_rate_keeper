@@ -89,6 +89,7 @@ class CurrencyController extends BaseController
     #[Route('/currency/{id}', name: 'currency_delete', methods: ['DELETE'])]
     public function deleteCurrency(int $id): JsonResponse
     {
+        // оберни в try-catch
         $deleted = $this->currencyService->deleteCurrency($id);
 
         // оставлю тут коммент, потому что тут вообще странное все делается, не удален значит not found
