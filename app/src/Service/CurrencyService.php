@@ -5,9 +5,9 @@ namespace App\Service;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
+use App\Exception\CurrencyAlreadyExistsException;
 use App\Exception\CurrencyNotFoundException;
 use App\Exception\NotDeleteCurrencyException;
-use App\Exception\CurrencyAlreadyExistsException;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
