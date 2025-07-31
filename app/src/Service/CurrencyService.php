@@ -6,6 +6,8 @@ use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
 use App\Exception\CurrencyAlreadyExistsException;
+use App\Exception\CurrencyNotFoundException;
+use App\Exception\NotDeleteCurrencyException;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -52,6 +54,7 @@ class CurrencyService
     public function updateCurrency(CurrencyUpdateDto $dto): ?Currency
     {
         $currency = $this->getCurrencyById($dto->id);
+
         if (!$currency instanceof Currency) {
             return null;
         }
@@ -78,19 +81,22 @@ class CurrencyService
         return $currency;
     }
 
-    public function deleteCurrency(int $id): bool
+    public function deleteCurrency(int $id): void
     {
         $currency = $this->getCurrencyById($id);
 
         if (!$currency instanceof Currency) {
-            return false;
+            throw new CurrencyNotFoundException("Currency with id {$id} not found");
         }
 
-        $this->entityManager->remove($currency);
+        try {
+            $this->entityManager->remove($currency);
 
-        $this->entityManager->flush();
-
-        return true;
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            // создай свое исключение NotDeleteCurrencyException и если есть секция catch то заворачивай все в это исключение
+            throw new NotDeleteCurrencyException($e);
+        }
     }
 
     public function getAllCurrencies(): array
