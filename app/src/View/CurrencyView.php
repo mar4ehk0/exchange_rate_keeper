@@ -2,7 +2,6 @@
 
 namespace App\View;
 
-
 use App\Entity\Currency;
 
 readonly class CurrencyView

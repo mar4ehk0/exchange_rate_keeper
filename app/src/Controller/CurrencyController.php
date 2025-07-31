@@ -7,6 +7,8 @@ use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
 use App\Exception\CurrencyAlreadyExistsException;
 use App\Service\CurrencyService;
+use App\View\CurrencyDeleteView;
+use App\View\CurrencyErrorView;
 use App\View\CurrencyView;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,13 +37,9 @@ class CurrencyController extends BaseController
             return $this->createResponseHttpConflict($e);
         }
 
-        return $this->createResponseSuccess([
-            'id' => $currency->getId(),
-            'code' => $currency->getCode(),
-            'char' => $currency->getChar(),
-            'nominal' => $currency->getNominal(),
-            'humanName' => $currency->getHumanName(),
-        ]);
+        $view = new CurrencyView($currency);
+
+        return $this->createResponseSuccess($view->getData());
     }
 
     #[Route('/currency/{id}', name: 'get_currency', methods: ['GET'])]
@@ -50,7 +48,7 @@ class CurrencyController extends BaseController
         $currency = $this->currencyService->getCurrencyById($id);
 
         if (!$currency instanceof Currency) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+            return $this->createResponseNotFound(CurrencyErrorView::notFound($id));
         }
 
         $view = new CurrencyView($currency);
@@ -70,18 +68,15 @@ class CurrencyController extends BaseController
         try {
             $currency = $this->currencyService->updateCurrency($dto);
             if (!$currency instanceof Currency) {
-                return $this->createResponseNotFound(['class' => Currency::class, 'id' => $dto->id]);
+                return $this->createResponseNotFound(CurrencyErrorView::notFound($dto->id));
             }
         } catch (CurrencyAlreadyExistsException $e) {
-            return $this->createResponseHttpConflict(['class' => Currency::class, 'id' => $dto->id, 'message' => $e->getMessage()]);
+            return $this->createResponseHttpConflict(CurrencyErrorView::httpConflict($dto->id, $e->getMessage()));
         }
 
-        return $this->createResponseSuccess([
-            'code' => $currency->getCode(),
-            'char' => $currency->getChar(),
-            'nominal' => $currency->getNominal(),
-            'humanName' => $currency->getHumanName(),
-        ]);
+        $view = new CurrencyView($currency);
+
+        return $this->createResponseSuccess($view->getData());
     }
 
     #[Route('/currency/{id}', name: 'currency_delete', methods: ['DELETE'])]
@@ -91,9 +86,9 @@ class CurrencyController extends BaseController
 
         // оставлю тут коммент, потому что тут вообще странное все делается, не удален значит not found
         if (!$deleted) {
-            return $this->createResponseInternalServerError(['class' => Currency::class, 'id' => $id]);
+            return $this->createResponseInternalServerError(CurrencyErrorView::internalServerError($id));
         }
 
-        return $this->createResponseSuccess(['success' => 'Currency successfully deleted']);
+        return $this->createResponseSuccess(CurrencyDeleteView::getData());
     }
 }
