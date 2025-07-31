@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\DTO\CurrencyCreationDto;
 use App\DTO\CurrencyUpdateDto;
 use App\Entity\Currency;
+use App\Exception\CurrencyAlreadyExistsException;
 use App\Exception\CurrencyNotFoundException;
 use App\Exception\NotDeleteCurrencyException;
 use App\Service\CurrencyService;
+use App\View\CurrencyErrorView;
+use App\View\CurrencyView;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -29,15 +32,15 @@ class CurrencyController extends BaseController
             return $this->createResponseBadRequest($errors);
         }
 
-        $currency = $this->currencyService->createCurrency($dto);
+        try {
+            $currency = $this->currencyService->createCurrency($dto);
+        } catch (CurrencyAlreadyExistsException $e) {
+            return $this->createResponseHttpConflict($e);
+        }
 
-        return $this->createResponseSuccess([
-            'id' => $currency->getId(),
-            'code' => $currency->getCode(),
-            'char' => $currency->getChar(),
-            'nominal' => $currency->getNominal(),
-            'humanName' => $currency->getHumanName(),
-        ]);
+        $view = new CurrencyView($currency);
+
+        return $this->createResponseSuccess($view->getData());
     }
 
     #[Route('/currency/{id}', name: 'get_currency', methods: ['GET'])]
@@ -46,43 +49,35 @@ class CurrencyController extends BaseController
         $currency = $this->currencyService->getCurrencyById($id);
 
         if (!$currency instanceof Currency) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+            return $this->createResponseNotFound(CurrencyErrorView::notFound($id));
         }
 
-        return $this->json([
-            'code' => $currency->getCode(),
-            'char' => $currency->getChar(),
-            'nominal' => $currency->getNominal(),
-            'humanName' => $currency->getHumanName(),
-        ]);
+        $view = new CurrencyView($currency);
+
+        return $this->createResponseSuccess($view->getData());
     }
 
-    #[Route('/currency/{id}', name: 'currency_update', methods: ['POST'])]
-    public function updateCurrency(int $id, CurrencyUpdateDto $dto): JsonResponse
+    #[Route('/currency/{id}', name: 'currency_update', methods: ['PATCH'])]
+    public function updateCurrency(CurrencyUpdateDto $dto): JsonResponse
     {
-        dd($dto);
-        dd(__DIR__);
-        $data = $request->toArray(); // давай пока так потом покажу как делать по симфони стайлу
+        $errors = $this->validator->validate($dto);
 
-        $dto = new CurrencyUpdateDto(
-            $id, // клади в dto для обновления и id
-            $data['code'] ?? '',
-            $data['char'] ?? '',
-            isset($data['nominal']) ? (int) $data['nominal'] : 0,
-            $data['humanName'] ?? '',
-        );
-
-        $currency = $this->currencyService->updateCurrency($dto);
-        if (!$currency instanceof Currency) {
-            return $this->createResponseNotFound(['class' => Currency::class, 'id' => $id]);
+        if (count($errors) > 0) {
+            return $this->createResponseBadRequest($errors);
         }
 
-        return $this->json([
-            'code' => $currency->getCode(),
-            'char' => $currency->getChar(),
-            'nominal' => $currency->getNominal(),
-            'humanName' => $currency->getHumanName(),
-        ]);
+        try {
+            $currency = $this->currencyService->updateCurrency($dto);
+            if (!$currency instanceof Currency) {
+                return $this->createResponseNotFound(CurrencyErrorView::notFound($dto->id));
+            }
+        } catch (CurrencyAlreadyExistsException $e) {
+            return $this->createResponseHttpConflict(CurrencyErrorView::httpConflict($dto->id, $e->getMessage()));
+        }
+
+        $view = new CurrencyView($currency);
+
+        return $this->createResponseSuccess($view->getData());
     }
 
     #[Route('/currency/{id}', name: 'currency_delete', methods: ['DELETE'])]
